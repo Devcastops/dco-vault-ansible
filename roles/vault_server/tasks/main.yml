@@ -32,7 +32,7 @@
   
   - name: Wipe vault Data
     file:
-      path: "{{vault_data_dir}}"
+      path: "{{data_dir}}"
       state: absent
     when: wipe_data
     notify: Restart vault
@@ -46,7 +46,7 @@
       mode: "0750"
     with_items: 
       - "{{ config_dir }}"
-      - "{{vault_data_dir}}"
+      - "{{data_dir}}"
   
   - name: Add vault config
     template:

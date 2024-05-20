@@ -4,7 +4,7 @@ api_addr      = "https://vault.devcastops.com:8200"
 disable_mlock = true
 
 storage "raft" {
-  path = "{{ vault_data_dir }}"
+  path = "{{ data_dir }}"
   node_id = "raft_node_1"
 }
 
