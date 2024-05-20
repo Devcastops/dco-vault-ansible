@@ -9,23 +9,23 @@
   
   - name: Create vault Group
     group:
-      name: "{{ vault_group }}"
+      name: "{{ group }}"
   
   - name: Create vault User
     user:
-      name: "{{ vault_user }}"
-      group: "{{ vault_group }}"
+      name: "{{ user }}"
+      group: "{{ group }}"
       groups: 
         - "{{ lets_encrypt_group }}"
   
   - name: Install vault
     ansible.builtin.get_url:
-      url: https://releases.hashicorp.com/vault/{{ vault_version }}/vault_{{ vault_version }}_linux_amd64.zip
-      dest: /tmp/vault{{ vault_version }}.zip
+      url: https://releases.hashicorp.com/vault/{{ version }}/vault_{{ version }}_linux_amd64.zip
+      dest: /tmp/vault{{ version }}.zip
   
   - name: Unzip vault
     unarchive:
-      src: /tmp/vault{{ vault_version }}.zip
+      src: /tmp/vault{{ version }}.zip
       dest: /usr/local/bin
       remote_src: true
     notify: Restart vault
@@ -34,7 +34,7 @@
     file:
       path: "{{vault_data_dir}}"
       state: absent
-    when: vault_wipe_data
+    when: wipe_data
     notify: Restart vault
   
   - name: Create vault Directory
@@ -45,13 +45,13 @@
       group: vault
       mode: "0750"
     with_items: 
-      - "{{ vault_config_dir }}"
+      - "{{ config_dir }}"
       - "{{vault_data_dir}}"
   
   - name: Add vault config
     template:
       src: config.hcl.j2
-      dest: "{{ vault_config_dir }}/config.hcl"
+      dest: "{{ config_dir }}/config.hcl"
     notify: Restart vault
   
   - name: Add vault.Service

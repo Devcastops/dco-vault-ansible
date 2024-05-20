@@ -1,2 +1,14 @@
 ---
 # vars file for vault_server
+wipe_data: false
+config_dir: "/etc/vault.d"
+data_dir: "/opt/vault/data"
+group: vault
+user: vault
+version: 1.16.2
+tls_key_dest: ""
+tls_crt_dest: ""
+
+#GCP auto unseal
+key_name: "vault"
+crypto_key: "vault-unseal-key"
