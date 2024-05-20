@@ -1,0 +1,23 @@
+ui            = true
+cluster_addr  = "https://vault.devcastops.com:8201"
+api_addr      = "https://vault.devcastops.com:8200"
+disable_mlock = true
+
+storage "raft" {
+  path = "{{ vault_data_dir }}"
+  node_id = "raft_node_1"
+}
+
+listener "tcp" {
+  address       = "0.0.0.0:8200"
+  tls_cert_file = "{{ vault_tls_crt_dest }}"
+  tls_key_file  = "{{ vault_tls_key_dest }}"
+}
+
+seal "gcpckms" {
+  key_ring  = "{{ key_name }}"
+  crypto_key = "{{ crypto_key }}"
+  project   = "devcastops"
+  region = "global"
+}
+

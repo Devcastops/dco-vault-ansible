@@ -1,0 +1,62 @@
+---
+
+  - name: Install Packages
+    ansible.builtin.package:
+      name: "{{item}}"
+    with_items:
+      - unzip
+      - jq
+  
+  - name: Create vault Group
+    group:
+      name: "{{ vault_group }}"
+  
+  - name: Create vault User
+    user:
+      name: "{{ vault_user }}"
+      group: "{{ vault_group }}"
+      groups: 
+        - "{{ lets_encrypt_group }}"
+  
+  - name: Install vault
+    ansible.builtin.get_url:
+      url: https://releases.hashicorp.com/vault/{{ vault_version }}/vault_{{ vault_version }}_linux_amd64.zip
+      dest: /tmp/vault{{ vault_version }}.zip
+  
+  - name: Unzip vault
+    unarchive:
+      src: /tmp/vault{{ vault_version }}.zip
+      dest: /usr/local/bin
+      remote_src: true
+    notify: Restart vault
+  
+  - name: Wipe vault Data
+    file:
+      path: "{{vault_data_dir}}"
+      state: absent
+    when: vault_wipe_data
+    notify: Restart vault
+  
+  - name: Create vault Directory
+    file:
+      path: "{{item}}"
+      state: directory
+      owner: vault
+      group: vault
+      mode: "0750"
+    with_items: 
+      - "{{ vault_config_dir }}"
+      - "{{vault_data_dir}}"
+  
+  - name: Add vault config
+    template:
+      src: config.hcl.j2
+      dest: "{{ vault_config_dir }}/config.hcl"
+    notify: Restart vault
+  
+  - name: Add vault.Service
+    template:
+      src: vault.service.j2
+      dest: /etc/systemd/system/vault.service
+    notify: Restart vault
+  
