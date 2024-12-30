@@ -25,7 +25,7 @@
     HCP_CLIENT_SECRET: "{{ HCP_CLIENT_SECRET }}"
     HCP_CLIENT_ID: "{{ HCP_CLIENT_ID }}"
   shell:
-    cmd: "hcp vault-secrets secrets delete root_token --app=0-secrets"
+    cmd: "hcp vault-secrets secrets delete VAULT_TOKEN --app=0-secrets"
   when: not initialized
   ignore_errors: true
 
@@ -36,7 +36,7 @@
     HCP_CLIENT_SECRET: "{{ HCP_CLIENT_SECRET }}"
     HCP_CLIENT_ID: "{{ HCP_CLIENT_ID }}"
   shell:
-    cmd: "echo -n {{bootstap_token}} | hcp vault-secrets secrets create root_token --data-file=- --app=0-secrets --format=json"
+    cmd: "echo -n {{bootstap_token}} | hcp vault-secrets secrets create VAULT_TOKEN --data-file=- --app=0-secrets --format=json"
   when: not initialized
 
 - name: remove old  bootstrap
