@@ -1,0 +1,6 @@
+vault_output: "{{ init.stdout | from_json }}"
+bootstap_token: "{{ vault_output.root_token }}"
+vault_shards: "{{ vault_output.recovery_keys_b64 }}"
+initialized: "{{ health.status == 200 }}"
+HCP_CLIENT_SECRET: "{{ lookup('ansible.builtin.env', 'HCP_CLIENT_SECRET') }}"
+HCP_CLIENT_ID: "{{ lookup('ansible.builtin.env', 'HCP_CLIENT_ID') }}"

@@ -1,0 +1,61 @@
+# find if is bootstraped
+
+- name: check status of vault server
+  ansible.builtin.uri:
+    url: https://vault.devcastops.com:8200/v1/sys/health
+    return_content: true
+    status_code: [200,501]
+  register: health
+
+# bootstrap vault
+
+- name: init vault
+  # no_log: true
+  shell:
+    cmd: vault operator init -address=https://vault.devcastops.com:8200 -recovery-shares=3 -recovery-threshold=2 -format=json
+  register: init
+  when: not initialized
+
+# upload tokens in to vault secrets
+
+- name: remove old bootstrap
+  delegate_to: localhost
+  no_log: false
+  environment:
+    HCP_CLIENT_SECRET: "{{ HCP_CLIENT_SECRET }}"
+    HCP_CLIENT_ID: "{{ HCP_CLIENT_ID }}"
+  shell:
+    cmd: "hcp vault-secrets secrets delete root_token --app=0-secrets"
+  when: not initialized
+  ignore_errors: true
+
+- name: store bootstrap
+  delegate_to: localhost
+  no_log: false
+  environment:
+    HCP_CLIENT_SECRET: "{{ HCP_CLIENT_SECRET }}"
+    HCP_CLIENT_ID: "{{ HCP_CLIENT_ID }}"
+  shell:
+    cmd: "echo -n {{bootstap_token}} | hcp vault-secrets secrets create root_token --data-file=- --app=0-secrets --format=json"
+  when: not initialized
+
+- name: remove old  bootstrap
+  delegate_to: localhost
+  no_log: false
+  environment:
+    HCP_CLIENT_SECRET: "{{ HCP_CLIENT_SECRET }}"
+    HCP_CLIENT_ID: "{{ HCP_CLIENT_ID }}"
+  shell:
+    cmd: "hcp vault-secrets secrets delete vault_shards --app=0-secrets"
+  when: not initialized
+  ignore_errors: true
+
+- name: store bootstrap
+  delegate_to: localhost
+  no_log: false
+  environment:
+    HCP_CLIENT_SECRET: "{{ HCP_CLIENT_SECRET }}"
+    HCP_CLIENT_ID: "{{ HCP_CLIENT_ID }}"
+  shell:
+    cmd: "echo -n {{vault_shards}} | hcp vault-secrets secrets create vault_shards --data-file=- --app=0-secrets --format=json"
+  when: not initialized
