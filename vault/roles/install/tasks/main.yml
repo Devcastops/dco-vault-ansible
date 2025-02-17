@@ -9,4 +9,3 @@
       src: /tmp/vault{{ version }}.zip
       dest: /usr/local/bin
       remote_src: true
-    notify: Restart vault
