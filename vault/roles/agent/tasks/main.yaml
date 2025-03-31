@@ -1,0 +1,24 @@
+---
+
+- name: Create agent Directory
+  file:
+    path: "{{item}}"
+    state: directory
+    mode: "0755"
+  with_items: 
+  - "{{ config_dir }}"
+
+- name: Load in agent config
+  template:
+    src: config.hcl.tpl
+    dest: "{{ config_dir }}/config.hcl"
+    mode: "0444"
+  notify:
+    - Restart agent
+
+- name: Load in agent systemfile
+  template:
+    src: vault-agent.service.j2
+    dest: /etc/systemd/system/vault-agent.service
+  notify: Restart agent
+  

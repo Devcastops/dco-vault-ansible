@@ -25,7 +25,7 @@
     HCP_CLIENT_SECRET: "{{ HCP_CLIENT_SECRET }}"
     HCP_CLIENT_ID: "{{ HCP_CLIENT_ID }}"
   shell:
-    cmd: "hcp vault-secrets secrets delete VAULT_TOKEN --app=0-secrets"
+    cmd: "hcp vault-secrets secrets delete VAULT_TOKEN --app={{ secret_app }}"
   when: not initialized
   ignore_errors: true
 
@@ -36,7 +36,7 @@
     HCP_CLIENT_SECRET: "{{ HCP_CLIENT_SECRET }}"
     HCP_CLIENT_ID: "{{ HCP_CLIENT_ID }}"
   shell:
-    cmd: "echo -n {{bootstap_token}} | hcp vault-secrets secrets create VAULT_TOKEN --data-file=- --app=0-secrets --format=json"
+    cmd: "echo -n {{bootstap_token}} | hcp vault-secrets secrets create VAULT_TOKEN --data-file=- --app={{ secret_app }} --format=json"
   when: not initialized
 
 - name: remove old  bootstrap
@@ -46,7 +46,7 @@
     HCP_CLIENT_SECRET: "{{ HCP_CLIENT_SECRET }}"
     HCP_CLIENT_ID: "{{ HCP_CLIENT_ID }}"
   shell:
-    cmd: "hcp vault-secrets secrets delete vault_shards --app=0-secrets"
+    cmd: "hcp vault-secrets secrets delete vault_shards --app={{ secret_app }}"
   when: not initialized
   ignore_errors: true
 
@@ -57,5 +57,5 @@
     HCP_CLIENT_SECRET: "{{ HCP_CLIENT_SECRET }}"
     HCP_CLIENT_ID: "{{ HCP_CLIENT_ID }}"
   shell:
-    cmd: "echo -n {{vault_shards}} | hcp vault-secrets secrets create vault_shards --data-file=- --app=0-secrets --format=json"
+    cmd: "echo -n {{vault_shards}} | hcp vault-secrets secrets create vault_shards --data-file=- --app={{ secret_app }} --format=json"
   when: not initialized

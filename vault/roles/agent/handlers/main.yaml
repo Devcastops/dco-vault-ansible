@@ -1,0 +1,8 @@
+---
+
+- name: Restart agent
+  systemd:
+    name: vault-agent.service
+    state: restarted
+    enabled: true
+    daemon_reload: true
