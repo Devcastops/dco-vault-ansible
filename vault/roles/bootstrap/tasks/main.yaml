@@ -12,7 +12,7 @@
 - name: init vault
   # no_log: true
   shell:
-    cmd: vault operator init -address=https://vault.devcastops.com:8200 -recovery-shares=3 -recovery-threshold=2 -format=json
+    cmd: vault operator init -address=https://vault.devcastops.com -recovery-shares=3 -recovery-threshold=2 -format=json
   register: init
   when: not initialized
 
