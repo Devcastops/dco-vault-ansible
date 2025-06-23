@@ -1,7 +1,7 @@
 #! /bin/bash
 
 
-export VAULT_ADDR=https://vault.devcastops.com:8200
+export VAULT_ADDR=https://vault.devcastops.com
 
 vault login -method=gcp -path=core/gcp role=vault_server > /dev/null
 
