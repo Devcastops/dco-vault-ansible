@@ -15,20 +15,7 @@
     user:
       name: "{{ user }}"
       group: "{{ group }}"
-      groups: 
-        - "{{ lets_encrypt_group }}"
   
-  - name: Install vault
-    ansible.builtin.get_url:
-      url: https://releases.hashicorp.com/vault/{{ version }}/vault_{{ version }}_linux_amd64.zip
-      dest: /tmp/vault{{ version }}.zip
-  
-  - name: Unzip vault
-    unarchive:
-      src: /tmp/vault{{ version }}.zip
-      dest: /usr/local/bin
-      remote_src: true
-    notify: Restart vault
   
   - name: Wipe vault Data
     file:
@@ -54,24 +41,9 @@
       dest: "{{ config_dir }}/config.hcl"
     notify: Restart vault
 
-  - name: Add rotateca script
-    template:
-      src: rotateca.sh.j2
-      dest: "{{ config_dir }}/rotateca.sh"
-      mode: "0744"
-    run_once: true
-
-  - name: run rotateca.sh
-    ansible.builtin.cron:
-      name: "rotateca"
-      minute: "*"
-      hour: "1"
-      weekday: "6"
-      job: "{{ config_dir }}/rotateca.sh"
 
   - name: Add vault.Service
     template:
       src: vault.service.j2
       dest: /etc/systemd/system/vault.service
     notify: Restart vault
-  
