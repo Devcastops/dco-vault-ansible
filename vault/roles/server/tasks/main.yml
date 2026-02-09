@@ -1,12 +1,4 @@
 ---
-
-  - name: Install Packages
-    ansible.builtin.package:
-      name: "{{item}}"
-    with_items:
-      - unzip
-      - jq
-  
   - name: Create vault Group
     group:
       name: "{{ group }}"

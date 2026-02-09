@@ -1,4 +1,12 @@
 ---
+  - name: Install Packages
+    ansible.builtin.package:
+      name: "{{item}}"
+    with_items:
+      - unzip
+      - jq
+  
+
   - name: Install vault
     ansible.builtin.get_url:
       url: https://releases.hashicorp.com/vault/{{ version }}/vault_{{ version }}_linux_amd64.zip
