@@ -8,7 +8,6 @@
       name: "{{ user }}"
       group: "{{ group }}"
   
-  
   - name: Wipe vault Data
     file:
       path: "{{data_dir}}"
