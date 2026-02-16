@@ -5,7 +5,7 @@ api_addr      = "https://vault.devcastops.com:8200"
 {% else %}
 cluster_addr  = "http://vault.devcastops.com:8201"
 api_addr      = "http://vault.devcastops.com:8200"
-{% end %}
+{% endif %}
 disable_mlock = true
 
 storage "raft" {
@@ -20,7 +20,7 @@ listener "tcp" {
   tls_key_file  = "{{ tls_key_dest }}"
   {% else %}
   tls_disable   = true
-  {% end %}
+  {% endif %}
 }
 
 seal "gcpckms" {
