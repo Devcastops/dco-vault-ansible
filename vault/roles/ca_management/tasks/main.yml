@@ -1,6 +1,5 @@
 ---
 
-
   - name: Add rotateca script
     template:
       src: rotateca.sh.j2
