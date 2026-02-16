@@ -1,6 +1,11 @@
 ui            = true
+{% if tls_crt_dest != "" and tls_key_dest != "" %}
 cluster_addr  = "https://vault.devcastops.com:8201"
 api_addr      = "https://vault.devcastops.com:8200"
+{% else %}
+cluster_addr  = "http://vault.devcastops.com:8201"
+api_addr      = "http://vault.devcastops.com:8200"
+{% end %}
 disable_mlock = true
 
 storage "raft" {
@@ -10,8 +15,12 @@ storage "raft" {
 
 listener "tcp" {
   address       = "0.0.0.0:8200"
+  {% if tls_crt_dest != "" and tls_key_dest != "" %}
   tls_cert_file = "{{ tls_crt_dest }}"
   tls_key_file  = "{{ tls_key_dest }}"
+  {% else %}
+  tls_disable   = true
+  {% end %}
 }
 
 seal "gcpckms" {
