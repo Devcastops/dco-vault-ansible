@@ -6,6 +6,9 @@ After=network-online.target
 ConditionFileNotEmpty={{ config_dir }}/config.hcl
 
 [Service]
+{% if vault_storage_backend == 'postgresql' %}
+ExecStartPre={{ config_dir }}/fetch-postgres-password.sh
+{% endif %}
 User={{ user }}
 Group={{ group }}
 ExecStart=/usr/local/bin/vault server -config={{ config_dir }}
