@@ -32,6 +32,26 @@
       dest: "{{ config_dir }}/config.hcl"
     notify: Restart vault
 
+  - name: Deploy postgres password fetch script
+    template:
+      src: fetch-postgres-password.sh.j2
+      dest: "{{ config_dir }}/fetch-postgres-password.sh"
+      owner: root
+      group: root
+      mode: "0750"
+    when: vault_storage_backend == 'postgresql'
+    notify: Restart vault
+
+  - name: Deploy postgres environment config
+    template:
+      src: postgres.env.j2
+      dest: "{{ config_dir }}/postgres.env"
+      owner: root
+      group: root
+      mode: "0640"
+    when: vault_storage_backend == 'postgresql'
+    notify: Restart vault
+
 
   - name: Add vault.Service
     template:
