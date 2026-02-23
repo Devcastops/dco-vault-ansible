@@ -49,7 +49,9 @@
       owner: root
       group: root
       mode: "0640"
-    when: vault_storage_backend == 'postgresql'
+    when:
+      - vault_storage_backend == 'postgresql'
+      - gcp_project_id != '<gcp-project-id>'
     notify: Restart vault
 
 

@@ -7,16 +7,23 @@ ConditionFileNotEmpty={{ config_dir }}/config.hcl
 
 [Service]
 {% if vault_storage_backend == 'postgresql' %}
-ExecStartPre={{ config_dir }}/fetch-postgres-password.sh
+ExecStartPre=+{{ config_dir }}/fetch-postgres-password.sh
 {% endif %}
 User={{ user }}
 Group={{ group }}
 ExecStart=/usr/local/bin/vault server -config={{ config_dir }}
 ExecReload=/bin/kill --signal HUP $MAINPID
+{% if vault_storage_backend == 'postgresql' %}
+ExecStopPost=-/bin/rm -f {{ config_dir }}/storage-postgres.hcl
+{% endif %}
 KillMode=process
 KillSignal=SIGTERM
 Restart=on-failure
 LimitNOFILE=65536
+ProtectSystem=full
+PrivateTmp=yes
+ProtectHome=read-only
+NoNewPrivileges=yes
 
 [Install]
 WantedBy=multi-user.target
