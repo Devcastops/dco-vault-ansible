@@ -5,7 +5,7 @@ config_dir: "/etc/vault.d"
 data_dir: "/opt/vault/data"
 group: vault
 user: vault
-version: 1.18.0
+version: 1.21.3
 tls_key_dest: ""
 tls_crt_dest: ""
 
