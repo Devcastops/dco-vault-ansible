@@ -12,3 +12,18 @@ tls_crt_dest: ""
 #GCP auto unseal
 key_name: "vault"
 crypto_key: "vault-unseal-key"
+
+# Storage backend: 'raft' or 'postgresql'
+vault_storage_backend: "raft"
+
+# PostgreSQL storage settings (only used when vault_storage_backend == 'postgresql')
+gcp_project_id: "<gcp-project-id>"
+postgres_secret_name: "<postgres-secret-name>"
+postgres_host: "<postgres-host>"
+postgres_port: "5432"
+postgres_user: "vault"
+postgres_database: "vault"
+postgres_sslmode: "require"
+postgres_table: "vault_kv_store"
+postgres_ha_enabled: "false"
+postgres_ha_table: "vault_ha_locks"

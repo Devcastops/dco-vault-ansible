@@ -8,10 +8,12 @@ api_addr      = "http://vault.devcastops.com:8200"
 {% endif %}
 disable_mlock = true
 
+{% if vault_storage_backend == 'raft' %}
 storage "raft" {
   path = "{{ data_dir }}"
   node_id = "raft_node_1"
 }
+{% endif %}
 
 listener "tcp" {
   address       = "0.0.0.0:8200"
