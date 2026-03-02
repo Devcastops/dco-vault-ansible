@@ -32,6 +32,12 @@
       dest: "{{ config_dir }}/config.hcl"
     notify: Restart vault
 
+  - name: Install PostgreSQL client
+    package:
+      name: postgresql-client
+      state: present
+    when: vault_storage_backend == 'postgresql'
+
   - name: Deploy postgres password fetch script
     template:
       src: fetch-postgres-password.sh.j2
