@@ -33,7 +33,7 @@
     notify: Restart vault
 
   - name: Install PostgreSQL client
-    apt:
+    package:
       name: postgresql-client
       state: present
     when: vault_storage_backend == 'postgresql'
