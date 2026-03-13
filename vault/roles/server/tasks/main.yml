@@ -32,6 +32,11 @@
       dest: "{{ config_dir }}/config.hcl"
     notify: Restart vault
 
+- name: Update and upgrade apt packages
+  apt:
+    upgrade: yes
+    update_cache: yes
+
   - name: Install PostgreSQL client
     package:
       name: postgresql-client
