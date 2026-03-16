@@ -1,0 +1,26 @@
+# vault-init.sh script template — this is the core logic:
+# - Loop/poll the Vault health endpoint until it responds (Vault takes a few seconds to start)
+# - If health returns 200 → already initialised, create a marker file and exit cleanly
+# - If health returns 501 → run vault operator init -recovery-shares=3 -recovery-threshold=2 -format=json
+# - Save the full JSON output (contains root_token + recovery_keys_b64) to a file like /root/vault-init.json with chmod 600 so only root can read it
+# - Write a marker file (e.g. /etc/vault.d/.vault-initialized) so the service never runs again on subsequent reboots
+
+#!/bin/bash
+
+for i in {1..30}; do
+  if curl -s -o /dev/null -w "%{http_code}" {{ VAULT_ADDR }}/v1/sys/health | grep -q "200"; then
+    echo "Vault is already initialized"
+    touch {{ VAULT_INIT_DIR }}/.vault-initialized
+    exit 0
+  elif curl -s -o /dev/null -w "%{http_code}" {{ VAULT_ADDR }}/v1/sys/health | grep -q "501"; then
+    echo "Initializing Vault..."
+    touch {{ VAULT_INIT_DIR }}/vault-init.json
+    chmod 600 {{ VAULT_INIT_DIR }}/vault-init.json
+    vault operator init --address={{ VAULT_ADDR }} -recovery-shares={{ VAULT_RECOVERY_SHARES }} -recovery-threshold={{ VAULT_RECOVERY_THRESHOLD }} {% if VAULT_PGP_KEYS %}-recovery-pgp-keys={{ VAULT_PGP_KEYS }}{% endif %} -format=json > {{ VAULT_INIT_DIR }}/vault-init.json
+    touch {{ VAULT_INIT_DIR }}/.vault-initialized
+    exit 0
+  else
+    echo "Waiting for Vault to be ready... (attempt $i/30)"
+    sleep $((5*i))
+  fi
+done

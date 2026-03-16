@@ -1,0 +1,22 @@
+# vault-init.service systemd unit template — wires the script into systemd:
+# - Type=oneshot — run once and exit
+# - After=vault.service — waits for Vault to be up
+# - ConditionPathExists=!/etc/vault.d/.vault-initialized — skips entirely if marker file exists (idempotent across reboots)
+# - RemainAfterExit=yes — systemd considers the service "active" after it completes
+
+
+[Unit]
+Description=Vault Initialization Script
+Documentation=https://www.vault.io/docs/
+After=vault.service
+ConditionPathExists=!{{ VAULT_INIT_DIR }}/.vault-initialized
+
+[Service]
+Type=oneshot
+User={{ USER }}
+Group={{ GROUP }}
+ExecStart={{ VAULT_INIT_DIR }}/vault-init.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,23 @@
+# tasks/main.yml — deploys both:
+# - Copy the script template to the server with mode: 0700
+# - Copy the service unit to /etc/systemd/system/vault-init.service
+# - systemctl enable vault-init.service — so it runs on first boot automatically
+
+- name: Ensure vault-init directory exists
+  file:
+    path: "{{ VAULT_INIT_DIR }}"
+    state: directory
+    mode: '0700'
+
+
+- name: Copy vault-init script to server
+  copy:
+    src: vault-init.sh
+    dest: "{{ VAULT_INIT_DIR }}/vault-init.sh"
+    mode: '0700'
+
+- name: Copy vault-init systemd service unit to server
+  copy:
+    src: vault-init.service
+    dest: /etc/systemd/system/vault-init.service
+    mode: '0644'
