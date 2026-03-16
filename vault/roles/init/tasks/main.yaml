@@ -11,13 +11,13 @@
 
 
 - name: Copy vault-init script to server
-  copy:
+  template:
     src: vault-init.sh.j2
     dest: "{{ VAULT_INIT_DIR }}/vault-init.sh"
     mode: '0700'
 
 - name: Copy vault-init systemd service unit to server
-  copy:
+  template:
     src: vault-init.service.j2
     dest: /etc/systemd/system/vault-init.service
     mode: '0644'
