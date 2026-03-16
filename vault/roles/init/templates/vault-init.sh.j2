@@ -16,7 +16,7 @@ for i in {1..30}; do
     echo "Initializing Vault..."
     touch {{ VAULT_INIT_DIR }}/vault-init.json
     chmod 600 {{ VAULT_INIT_DIR }}/vault-init.json
-    vault operator init --address={{ VAULT_ADDR }} -recovery-shares={{ VAULT_RECOVERY_SHARES }} -recovery-threshold={{ VAULT_RECOVERY_THRESHOLD }} {% if VAULT_PGP_KEYS %}-recovery-pgp-keys={{ VAULT_PGP_KEYS }}{% endif %} -format=json > {{ VAULT_INIT_DIR }}/vault-init.json
+    vault operator init --address={{ VAULT_ADDR }} -recovery-shares={{ VAULT_RECOVERY_SHARES }} -recovery-threshold={{ VAULT_RECOVERY_THRESHOLD }} {% if VAULT_PGP_KEYS != "" %}-recovery-pgp-keys={{ VAULT_PGP_KEYS }}{% endif %} -format=json > {{ VAULT_INIT_DIR }}/vault-init.json
     touch {{ VAULT_INIT_DIR }}/.vault-initialized
     exit 0
   else
