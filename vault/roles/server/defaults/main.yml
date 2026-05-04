@@ -19,3 +19,5 @@ postgres_sslmode: "disable"
 postgres_table: "vault_kv_store"
 postgres_ha_enabled: "false"
 postgres_ha_table: "vault_ha_locks"
+
+trigger_file_location: "{{ config_dir }}/config.hcl"

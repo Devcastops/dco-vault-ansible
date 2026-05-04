@@ -4,6 +4,7 @@ Documentation=https://www.vault.io/
 Requires=network-online.target
 After=network-online.target
 ConditionFileNotEmpty={{ config_dir }}/config.hcl
+ConditionFileExists={{ trigger_file_location }}
 
 [Service]
 {% if vault_storage_backend == 'postgresql' %}

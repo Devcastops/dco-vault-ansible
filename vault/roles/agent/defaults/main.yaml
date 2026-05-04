@@ -1,1 +1,4 @@
 packer_build: false
+
+
+trigger_file_location: "{{ config_dir }}/config.hcl"

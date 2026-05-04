@@ -1,0 +1,5 @@
+template {
+   source      = "{{ config_dir }}/vault/consul.hcl.tpl"
+   destination = "{{ vault_config_dir }}/consul.hcl"
+   command = "systemctl reload vault.service"
+}

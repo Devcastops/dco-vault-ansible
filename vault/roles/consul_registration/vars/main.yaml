@@ -1,0 +1,4 @@
+config_dir: /etc/vault-agent.d
+vault_group: vault
+vault_user: vault
+vault_config_dir: /etc/vault.d

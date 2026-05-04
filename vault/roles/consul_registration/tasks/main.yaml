@@ -1,0 +1,25 @@
+---
+
+- name: Ensure vault dir exists
+  file:
+    path: "{{ config_dir }}/vault"
+    state: directory
+    mode: "0755"
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+
+- name: Load in agent config
+  template:
+    src: consul.hcl.tpl.j2
+    dest: "{{ config_dir }}/vault/consul.hcl.tpl"
+    mode: "0440"
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+  notify:
+    - Restart agent
+
+- name: Load in config file
+  template:
+    src: config.hcl.j2
+    dest: "{{ config_dir }}/vault_config.hcl"
+    mode: "0440"

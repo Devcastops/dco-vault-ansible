@@ -1,0 +1,9 @@
+{{ '{{' }} with secret "core/consul/creds/client" {{ '}}' }}
+service_registration "consul" {
+    {% if consul_addr is defined %}
+    address = "{{ consul_addr }}"
+    {% endif %}
+    token = "{{ '{{' }} .Data.token {{ '}}' }}"
+}
+
+{{ '{{' }} end {{ '}}' }}
