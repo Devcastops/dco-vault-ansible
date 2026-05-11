@@ -1,0 +1,2 @@
+vault_address: "http://localhost:8200"
+ttl_hours: 24*32
